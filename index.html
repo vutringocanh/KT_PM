@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đọc File PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        #pdf-viewer {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ccc;
+            overflow: auto;
+        }
+        canvas {
+            display: block;
+            margin: 10px auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="pdf-viewer"></div>
+    <script>
+        // URL của file PDF
+        const url = 'https://vutringocanh.github.io/KT_PM/NH%C3%93M%201_BC%20ki%E1%BB%83m%20th%E1%BB%AD%20ph%E1%BA%A7n%20m%E1%BB%81m.pdf';
+
+        // Tải và hiển thị PDF
+        pdfjsLib.getDocument(url).promise.then(function(pdf) {
+            for(let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                pdf.getPage(pageNum).then(function(page) {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale: scale });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+
+                    page.render(renderContext);
+                    document.getElementById('pdf-viewer').appendChild(canvas);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
